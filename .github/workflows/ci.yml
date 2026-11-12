@@ -1,6 +1,12 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Exact contribution commit to validate
+        required: true
+        type: string
   push:
     branches: [main]
   pull_request:
@@ -23,6 +29,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          ref: ${{ inputs.candidate || github.sha }}
 
       - name: Verify toolchain
         run: |
@@ -46,6 +53,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          ref: ${{ inputs.candidate || github.sha }}
 
       - name: Build
         run: ./build.sh
